@@ -1,4 +1,5 @@
 import Hoja, { Distancia, CrearHoja } from './hoja';
+import {DibujarNodo} from './canvas';
 
 export default class Nodo {
     private hojas: Hoja[];
@@ -9,6 +10,7 @@ export default class Nodo {
         this.Nombre = nombre;
         this.AgregarHojas(nodos);
         this.AsignarObjetivo(objetivo);
+        DibujarNodo(this);
     }
 
     AgregarHojas (nodos: Nodo[]) {
@@ -16,7 +18,7 @@ export default class Nodo {
     }
 
     AgregarHoja (nodo: Nodo) {
-        this.Hojas.push(CrearHoja(this, nodo));
+        this.Hojas.push(CrearHoja(this, nodo, true));
     }
 
     get Hojas (): Hoja[] {
@@ -35,7 +37,8 @@ export default class Nodo {
     }
 
     AsignarObjetivo (nodo: Nodo) {
-        if ((!this.Objetivo && nodo) || (nodo && this.Objetivo.Nodo.Nombre != nodo.Nombre)) {
+        if ((!this.Objetivo && nodo) || 
+        (nodo && this.Objetivo.Nodo.Nombre != nodo.Nombre)) {
             this.Objetivo = CrearHoja(this, nodo);
             this.Hojas.forEach(hoja => hoja.Nodo.AsignarObjetivo(nodo));
         }

@@ -13,10 +13,9 @@
   "license": "ISC",
   "devDependencies": {
     "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.9.3"
-  },
-  "dependencies": {
+    "webpack-dev-server": "^2.9.3",
     "ts-loader": "^3.0.2",
     "typescript": "^2.5.3"
-  }
+  },
+  "dependencies": {}
 }

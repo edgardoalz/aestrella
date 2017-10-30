@@ -1,0 +1,10 @@
+#contenido  {
+    margin: 0 auto;
+    width: 400px;
+}
+#contenido h1 {
+    text-align: center;
+}
+#plano {
+    border: 1px solid #cccccc;
+}
