@@ -1,5 +1,6 @@
 import Hoja, { Distancia, CrearHoja, F } from './hoja';
 import Nodo from './nodo';
+import {DibujarCamino} from './canvas';
 
 export default class AEstrella {
     private abiertos: Hoja[] = []; 
@@ -56,7 +57,7 @@ export default class AEstrella {
                 }
             }
         }
-
+        DibujarCamino(destino);
         return destino;
     }
 
