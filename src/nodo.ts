@@ -40,8 +40,15 @@ export default class Nodo {
         if ((!this.Objetivo && nodo) || 
         (nodo && this.Objetivo.Nodo.Nombre != nodo.Nombre)) {
             this.Objetivo = CrearHoja(this, nodo);
+            this.AgregarALista();
             this.Hojas.forEach(hoja => hoja.Nodo.AsignarObjetivo(nodo));
         }
+    }
+
+    AgregarALista() {
+        var span = document.createElement("tr");
+        span.innerHTML = `<td>${this.Nombre}</td><td>${this.Objetivo.Distancia.toFixed(0)}</td>`;
+        document.getElementById("heuristicas").appendChild(span);
     }
 
     set Objetivo (valor : Hoja) {

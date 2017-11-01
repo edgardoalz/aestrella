@@ -1,11 +1,12 @@
 import Nodo from './nodo';
-import Hoja from './hoja';
+import Hoja, {Distancia} from './hoja';
 
 var canvas = <HTMLCanvasElement> document.getElementById("plano");
 var ctx = canvas.getContext("2d");
 ctx.font = "12px Arial";
 var negro = "#333333";
 var azul = "#0000FF";
+var verde = "#00FF00";
 var rojo = "#FF0000";
 
 export var DibujarNodo = (nodo: Nodo, color?: string) => {
@@ -18,7 +19,11 @@ export var DibujarNodo = (nodo: Nodo, color?: string) => {
 };
 
 export var DibujarLinea = (a: Nodo, b: Nodo, color?: string) => {
+    const distancia = Distancia(a, b);
     ctx.beginPath();
+    ctx.fillStyle = verde;
+    ctx.fillText(distancia.toFixed(0), ((a.x+b.x)/2)+7, ((a.y+b.y)/2)+3);
+    ctx.fill();
     ctx.moveTo(a.x, a.y);
     ctx.lineTo(b.x, b.y);
     ctx.strokeStyle = color || negro;

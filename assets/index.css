@@ -1,10 +1,21 @@
 #contenido  {
     margin: 0 auto;
-    width: 400px;
+    width: 800px;
 }
 #contenido h1 {
     text-align: center;
 }
 #plano {
+    float: left;
+    /* display: inline-block; */
     /* border: 1px solid #cccccc; */
+}
+
+#datos {
+    float: right;
+    /* display: inline-block; */
+}
+
+table thead {
+    font-weight: bold;
 }

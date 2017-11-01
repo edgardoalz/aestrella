@@ -70,44 +70,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var canvas = document.getElementById("plano");
-var ctx = canvas.getContext("2d");
-ctx.font = "12px Arial";
-var negro = "#333333";
-var azul = "#0000FF";
-var rojo = "#FF0000";
-exports.DibujarNodo = function (nodo, color) {
-    ctx.beginPath();
-    ctx.fillStyle = rojo;
-    ctx.fillText(nodo.Nombre, nodo.x + 7, nodo.y + 3);
-    ctx.fillStyle = color || negro;
-    ctx.arc(nodo.x, nodo.y, 5, 0, 2 * Math.PI);
-    ctx.fill();
-};
-exports.DibujarLinea = function (a, b, color) {
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.lineTo(b.x, b.y);
-    ctx.strokeStyle = color || negro;
-    ctx.stroke();
-};
-exports.DibujarCamino = function (hoja) {
-    exports.DibujarNodo(hoja.Nodo, azul);
-    if (hoja.Padre) {
-        exports.DibujarLinea(hoja.Nodo, hoja.Padre.Nodo, azul);
-        exports.DibujarCamino(hoja.Padre);
-    }
-};
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var canvas_1 = __webpack_require__(0);
+var canvas_1 = __webpack_require__(1);
 exports.Distancia = function (a, b) {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 };
@@ -121,6 +84,49 @@ exports.CrearHoja = function (a, b, directo) {
 exports.G = function (hoja) { return hoja.Coste; };
 exports.H = function (hoja) { return hoja.Nodo.Objetivo.Distancia; };
 exports.F = function (hoja) { return exports.G(hoja) + exports.H(hoja); };
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var hoja_1 = __webpack_require__(0);
+var canvas = document.getElementById("plano");
+var ctx = canvas.getContext("2d");
+ctx.font = "12px Arial";
+var negro = "#333333";
+var azul = "#0000FF";
+var verde = "#00FF00";
+var rojo = "#FF0000";
+exports.DibujarNodo = function (nodo, color) {
+    ctx.beginPath();
+    ctx.fillStyle = rojo;
+    ctx.fillText(nodo.Nombre, nodo.x + 7, nodo.y + 3);
+    ctx.fillStyle = color || negro;
+    ctx.arc(nodo.x, nodo.y, 5, 0, 2 * Math.PI);
+    ctx.fill();
+};
+exports.DibujarLinea = function (a, b, color) {
+    var distancia = hoja_1.Distancia(a, b);
+    ctx.beginPath();
+    ctx.fillStyle = verde;
+    ctx.fillText(distancia.toFixed(0), ((a.x + b.x) / 2) + 7, ((a.y + b.y) / 2) + 3);
+    ctx.fill();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = color || negro;
+    ctx.stroke();
+};
+exports.DibujarCamino = function (hoja) {
+    exports.DibujarNodo(hoja.Nodo, azul);
+    if (hoja.Padre) {
+        exports.DibujarLinea(hoja.Nodo, hoja.Padre.Nodo, azul);
+        exports.DibujarCamino(hoja.Padre);
+    }
+};
 
 
 /***/ }),
@@ -156,8 +162,8 @@ console.log(final);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var hoja_1 = __webpack_require__(1);
-var canvas_1 = __webpack_require__(0);
+var hoja_1 = __webpack_require__(0);
+var canvas_1 = __webpack_require__(1);
 var Nodo = /** @class */ (function () {
     function Nodo(nombre, x, y, nodos, objetivo) {
         if (nodos === void 0) { nodos = []; }
@@ -199,8 +205,14 @@ var Nodo = /** @class */ (function () {
         if ((!this.Objetivo && nodo) ||
             (nodo && this.Objetivo.Nodo.Nombre != nodo.Nombre)) {
             this.Objetivo = hoja_1.CrearHoja(this, nodo);
+            this.AgregarALista();
             this.Hojas.forEach(function (hoja) { return hoja.Nodo.AsignarObjetivo(nodo); });
         }
+    };
+    Nodo.prototype.AgregarALista = function () {
+        var span = document.createElement("tr");
+        span.innerHTML = "<td>" + this.Nombre + "</td><td>" + this.Objetivo.Distancia.toFixed(0) + "</td>";
+        document.getElementById("heuristicas").appendChild(span);
     };
     Object.defineProperty(Nodo.prototype, "Objetivo", {
         get: function () {
@@ -224,8 +236,8 @@ exports.default = Nodo;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var hoja_1 = __webpack_require__(1);
-var canvas_1 = __webpack_require__(0);
+var hoja_1 = __webpack_require__(0);
+var canvas_1 = __webpack_require__(1);
 var AEstrella = /** @class */ (function () {
     function AEstrella(origen, objetivo) {
         this.abiertos = [];
@@ -263,6 +275,9 @@ var AEstrella = /** @class */ (function () {
     });
     AEstrella.prototype.AsignarOrigen = function (nodo) {
         this.origen = hoja_1.CrearHoja(nodo, nodo);
+        var span = document.createElement("p");
+        span.innerHTML = "<b>Origen:</b> " + this.Origen.Nodo.Nombre;
+        document.getElementById("datos").appendChild(span);
     };
     AEstrella.prototype.EncontrarCamino = function () {
         var _this = this;
@@ -315,6 +330,9 @@ var AEstrella = /** @class */ (function () {
         if (!this.objetivo || this.objetivo.Nodo.Nombre != nodo.Nombre) {
             this.objetivo = hoja_1.CrearHoja(this.Origen.Nodo, nodo);
             this.Origen.Nodo.AsignarObjetivo(this.objetivo.Nodo);
+            var span = document.createElement("p");
+            span.innerHTML = "<b>Destino:</b> " + this.Objetivo.Nodo.Nombre;
+            document.getElementById("datos").appendChild(span);
         }
     };
     return AEstrella;

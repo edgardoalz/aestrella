@@ -31,6 +31,9 @@ export default class AEstrella {
 
     AsignarOrigen (nodo: Nodo) {
         this.origen = CrearHoja(nodo, nodo);
+        var span = document.createElement("p");
+        span.innerHTML = `<b>Origen:</b> ${this.Origen.Nodo.Nombre}`;
+        document.getElementById("datos").appendChild(span);
     }
 
     EncontrarCamino (): Hoja {
@@ -88,6 +91,9 @@ export default class AEstrella {
         if (!this.objetivo || this.objetivo.Nodo.Nombre != nodo.Nombre) {
             this.objetivo = CrearHoja(this.Origen.Nodo, nodo);
             this.Origen.Nodo.AsignarObjetivo(this.objetivo.Nodo);
+            var span = document.createElement("p");
+            span.innerHTML = `<b>Destino:</b> ${this.Objetivo.Nodo.Nombre}`;
+            document.getElementById("datos").appendChild(span);
         }
     }
 }
